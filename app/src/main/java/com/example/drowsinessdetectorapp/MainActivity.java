@@ -23,6 +23,7 @@ import com.google.android.gms.vision.MultiProcessor;
 import com.google.android.gms.vision.Tracker;
 import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.FaceDetector;
+import com.google.android.gms.vision.face.Landmark;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.greenrobot.eventbus.EventBus;
@@ -43,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
     private MediaPlayer alarmPlayer;
     private MediaPlayer warningPlayer;
+    private MediaPlayer yawnPlayer;
 
     private static final int RC_HANDLE_GMS = 9001;
     private static final int RC_HANDLE_CAMERA_PERM = 2;
@@ -91,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
 
         alarmPlayer = MediaPlayer.create(this,R.raw.alarm);
         warningPlayer = MediaPlayer.create(this,R.raw.warning);
+        yawnPlayer = MediaPlayer.create(this,R.raw.warning_yawn);
 
         int rc = ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
         if (rc == PackageManager.PERMISSION_GRANTED) {
@@ -131,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
 
         Context context = getApplicationContext();
         detector = new FaceDetector.Builder(context)
+                .setLandmarkType(FaceDetector.ALL_LANDMARKS)
                 .setClassificationType(FaceDetector.ALL_CLASSIFICATIONS)
                 .build();
 
@@ -220,6 +224,18 @@ public class MainActivity extends AppCompatActivity {
         releaseUpdatingLock();
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void mouthOpened(MouthOpenedEvent event) {
+        alarmPlayer.start();
+        releaseUpdatingLock();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void mouthClosed(MouthClosedEvent event) {
+        yawnPlayer.start();
+        releaseUpdatingLock();
+    }
+
 //    private boolean catchUpdatingLock() {
 //        return !updating.getAndSet(true);
 //    }
@@ -244,6 +260,8 @@ public class MainActivity extends AppCompatActivity {
 
         if (alarmPlayer.isPlaying()) alarmPlayer.pause();
         if (warningPlayer.isPlaying()) warningPlayer.pause();
+        if (yawnPlayer.isPlaying()) yawnPlayer.pause();
+
         mPreview.stop();
     }
 
@@ -253,6 +271,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (alarmPlayer.isPlaying()) alarmPlayer.stop();
         if (warningPlayer.isPlaying()) warningPlayer.stop();
+        if (yawnPlayer.isPlaying()) yawnPlayer.stop();
 
         if(detector != null) {
             detector.release();

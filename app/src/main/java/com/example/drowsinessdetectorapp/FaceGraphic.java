@@ -3,16 +3,21 @@ package com.example.drowsinessdetectorapp;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 
 import com.google.android.gms.vision.face.Face;
+import com.google.android.gms.vision.face.Landmark;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.List;
+
 public class FaceGraphic extends GraphicOverlay.Graphic {
     //private static final float FACE_POSITION_RADIUS = 10.0f;
-    private static final float EAR_THRESHOLD = 0.7f;
+    private static final float EAR_THRESHOLD = 0.65f;
     private static final int REQ_FPS = 30;
     private int eyeFrameCount = 0;
+    private int mouthFrameCount = 0;
 
     private static final float ID_TEXT_SIZE = 40.0f;
     private static final float ID_Y_OFFSET = 50.0f;
@@ -26,7 +31,7 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
 
     private volatile Face mFace;
 
-    private boolean leftClosed, rightClosed;
+    private boolean leftClosed, rightClosed, mouthOpened;
 
     FaceGraphic(GraphicOverlay overlay) {
         super(overlay);
@@ -106,6 +111,60 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
             }
             eyeFrameCount = 0;
         }
+
+        //Checking for Landmarks - Right, Left & Bottom Mouth
+        if ((contains(face.getLandmarks(), 11) != 99)
+                && (contains(face.getLandmarks(), 5) != 99)
+                && (contains(face.getLandmarks(), 0) != 99)) {
+            Log.i("FaceGraphic","Landmarks Present");
+            //Coordinate : Bottom Mouth
+            //int cBottomMouthX = (int) translateX(face.getLandmarks().get(contains(face.getLandmarks(), 0)).getPosition().x);
+            int cBottomMouthY = (int) translateY(face.getLandmarks().get(contains(face.getLandmarks(), 0)).getPosition().y);
+            //Coordinate : Left Mouth
+            //int cLeftMouthX = (int) translateX(face.getLandmarks().get(contains(face.getLandmarks(), 5)).getPosition().x);
+            int cLeftMouthY = (int) translateY(face.getLandmarks().get(contains(face.getLandmarks(), 5)).getPosition().y);
+            //Coordinate : Right Mouth
+            //int cRightMouthX = (int) translateX(face.getLandmarks().get(contains(face.getLandmarks(), 11)).getPosition().x);
+            int cRightMouthY = (int) translateY(face.getLandmarks().get(contains(face.getLandmarks(), 11)).getPosition().y);
+
+            //float centerPointX = (cLeftMouthX + cRightMouthX) / 2;
+            float centerPointY = ((cLeftMouthY + cRightMouthY) / 2) - 20;
+
+            //float differenceX = centerPointX - cBottomMouthX;
+            float differenceY = centerPointY - cBottomMouthY;
+
+            //Checking Mouth Open / Close
+            if (!mouthOpened && differenceY < (-100)) {
+                mouthOpened = true;
+            } else if(mouthOpened && differenceY >= (-100)) {
+                mouthOpened = false;
+            }
+            if (mouthOpened) {
+                mouthFrameCount += 1;
+                if(mouthFrameCount >= REQ_FPS) {
+                    canvas.drawText("ALERT: Yawning", right + 4 * ID_X_OFFSET, top - 10.0f, mIdAlert);
+                    EventBus.getDefault().post(new MouthOpenedEvent());
+                }
+            } else if (!mouthOpened) {
+                if (mouthFrameCount >= REQ_FPS) {
+                    canvas.drawText("", right + 4*ID_X_OFFSET, top - 10.0f, mIdAlert);
+                    EventBus.getDefault().post(new MouthClosedEvent());
+                }
+                mouthFrameCount = 0;
+            }
+
+        } else  {
+            Log.i("FaceGraphic","Landmarks Not Present");
+        }
+    }
+
+    int contains(List<Landmark> list, int name) {
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getType() == name) {
+                return i;
+            }
+        }
+        return 99;
     }
 
     void updateFace(Face face) {
