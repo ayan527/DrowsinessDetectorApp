@@ -1,8 +1,5 @@
 package com.example.drowsinessdetectorapp;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -12,9 +9,12 @@ import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -23,7 +23,6 @@ import com.google.android.gms.vision.MultiProcessor;
 import com.google.android.gms.vision.Tracker;
 import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.FaceDetector;
-import com.google.android.gms.vision.face.Landmark;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.greenrobot.eventbus.EventBus;
@@ -48,12 +47,11 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int RC_HANDLE_GMS = 9001;
     private static final int RC_HANDLE_CAMERA_PERM = 2;
-//    private static final int REQ_FPS = 30;
 
     private final AtomicBoolean updating = new AtomicBoolean(false);
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode != RC_HANDLE_CAMERA_PERM) {
             Log.d(TAG, "Got unexpected permission result: " + requestCode);
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -175,17 +173,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private class GraphicFaceTrackerFactory implements MultiProcessor.Factory<Face> {
+        private Context mContext = MainActivity.this;
         @Override
         public Tracker<Face> create(Face face) {
-            return new GraphicFaceTracker(mGraphicOverlay);
+            return new GraphicFaceTracker(mContext,mGraphicOverlay);
         }
     }
 
-    private class GraphicFaceTracker extends Tracker<Face> {
+    private static class GraphicFaceTracker extends Tracker<Face> {
         private GraphicOverlay mOverlay;
         private FaceGraphic mFaceGraphic;
+        private Context mContext;
 
-        GraphicFaceTracker(GraphicOverlay overlay) {
+        GraphicFaceTracker(Context mContext,GraphicOverlay overlay) {
+            this.mContext = mContext;
             mOverlay = overlay;
             mFaceGraphic = new FaceGraphic(overlay);
         }
@@ -198,7 +199,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onUpdate(FaceDetector.Detections<Face> detectionResults, Face face) {
             mOverlay.add(mFaceGraphic);
-            mFaceGraphic.updateFace(face);
+            mFaceGraphic.updateFace(mContext,face);
         }
 
         @Override

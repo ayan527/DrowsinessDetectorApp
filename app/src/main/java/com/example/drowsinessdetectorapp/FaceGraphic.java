@@ -1,5 +1,7 @@
 package com.example.drowsinessdetectorapp;
 
+import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -13,9 +15,10 @@ import org.greenrobot.eventbus.EventBus;
 import java.util.List;
 
 public class FaceGraphic extends GraphicOverlay.Graphic {
-    //private static final float FACE_POSITION_RADIUS = 10.0f;
-    private static final float EAR_THRESHOLD = 0.65f;
-    private static final int REQ_FPS = 30;
+    private static float EAR_THRESHOLD = 0.7f;
+    private static final int LANDMARK_CONST = 99;
+    private static final int REQ_EYE_FPS = 30;
+    private static final int REQ_MOUTH_FPS = 20;
     private int eyeFrameCount = 0;
     private int mouthFrameCount = 0;
 
@@ -30,7 +33,7 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
     private Paint mIdAlert;
 
     private volatile Face mFace;
-
+    private Context mContext;
     private boolean leftClosed, rightClosed, mouthOpened;
 
     FaceGraphic(GraphicOverlay overlay) {
@@ -55,6 +58,8 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
 
     @Override
     public void draw(Canvas canvas) {
+
+
         Face face = mFace;
         if (face == null) {
             return;
@@ -63,11 +68,6 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
         // Draws a circle at the position of the detected face, with the face's track id below.
         float x = translateX(face.getPosition().x + face.getWidth() / 2);
         float y = translateY(face.getPosition().y + face.getHeight() / 2);
-        //canvas.drawCircle(x, y, FACE_POSITION_RADIUS, mFacePositionPaint);
-        //canvas.drawText("Driver: " + mFaceId, x + ID_X_OFFSET, y + ID_Y_OFFSET, mIdPaint);
-        //canvas.drawText("happiness: " + String.format("%.2f", face.getIsSmilingProbability()), x - ID_X_OFFSET, y - ID_Y_OFFSET, mIdPaint);
-        //canvas.drawText("right eye: " + String.format("%.2f", face.getIsRightEyeOpenProbability()), x + ID_X_OFFSET * 2, y + ID_Y_OFFSET * 2, mIdPaint);
-        //canvas.drawText("left eye: " + String.format("%.2f", face.getIsLeftEyeOpenProbability()), x - ID_X_OFFSET*2, y - ID_Y_OFFSET*2, mIdPaint);
 
         // Draws a bounding box around the face.
         float xOffset = scaleX(face.getWidth() / 2.0f);
@@ -84,69 +84,83 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
 
         //Draw Texts for Driver, Left-Eye, Right-Eye
         canvas.drawText("DRIVER", left + 10.0f, top - 10.f, mIdPaint);
-        canvas.drawText("right eye: " + String.format("%.2f", rightEyesOpenProb), left + 10.0f, bottom + ID_Y_OFFSET, mIdPaint);
-        canvas.drawText("left eye: " + String.format("%.2f", leftEyesOpenProb), right + 4*ID_X_OFFSET, bottom + ID_Y_OFFSET, mIdPaint);
 
         //Checking for Eyes open & Close
-        if (leftClosed && face.getIsLeftEyeOpenProbability() > EAR_THRESHOLD) {
-            leftClosed = false;
-        } else if (!leftClosed &&  face.getIsLeftEyeOpenProbability() < EAR_THRESHOLD){
-            leftClosed = true;
-        }
-        if (rightClosed && face.getIsRightEyeOpenProbability() > EAR_THRESHOLD) {
-            rightClosed = false;
-        } else if (!rightClosed && face.getIsRightEyeOpenProbability() < EAR_THRESHOLD) {
-            rightClosed = true;
-        }
-        if (leftClosed && rightClosed) {
-            eyeFrameCount += 1;
-            if (eyeFrameCount >= REQ_FPS) {
-                canvas.drawText("ALERT: SLEEPY", right + 4*ID_X_OFFSET, top - 10.0f, mIdAlert);
-                EventBus.getDefault().post(new AllEyesClosedEvent());
+        if (contains(face.getLandmarks(),4) != LANDMARK_CONST && contains(face.getLandmarks(),10) != LANDMARK_CONST) {
+            canvas.drawText("right eye: " + String.format("%.2f", rightEyesOpenProb), left + 10.0f, bottom + ID_Y_OFFSET, mIdPaint);
+            canvas.drawText("left eye: " + String.format("%.2f", leftEyesOpenProb), right + 4*ID_X_OFFSET, bottom + ID_Y_OFFSET, mIdPaint);
+
+            if (mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                EAR_THRESHOLD = 0.8f;
+            } else if (mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+                EAR_THRESHOLD = 0.7f;
             }
-        } else if (!leftClosed && !rightClosed) {
-            if (eyeFrameCount >= REQ_FPS) {
-                canvas.drawText("", right + 4*ID_X_OFFSET, top - 10.0f, mIdAlert);
-                EventBus.getDefault().post(new AllEyesOpenedEvent());
+
+            if (leftClosed && face.getIsLeftEyeOpenProbability() > EAR_THRESHOLD) {
+                leftClosed = false;
+            } else if (!leftClosed && face.getIsLeftEyeOpenProbability() < EAR_THRESHOLD) {
+                leftClosed = true;
             }
-            eyeFrameCount = 0;
+            if (rightClosed && face.getIsRightEyeOpenProbability() > EAR_THRESHOLD) {
+                rightClosed = false;
+            } else if (!rightClosed && face.getIsRightEyeOpenProbability() < EAR_THRESHOLD) {
+                rightClosed = true;
+            }
+            if (leftClosed && rightClosed) {
+                eyeFrameCount += 1;
+                if (eyeFrameCount >= REQ_EYE_FPS) {
+                    canvas.drawText("ALERT: SLEEPY", right + 4 * ID_X_OFFSET, top - 10.0f, mIdAlert);
+                    EventBus.getDefault().post(new AllEyesClosedEvent());
+                }
+            } else if (!leftClosed && !rightClosed) {
+                if (eyeFrameCount >= REQ_EYE_FPS) {
+                    canvas.drawText("", right + 4 * ID_X_OFFSET, top - 10.0f, mIdAlert);
+                    EventBus.getDefault().post(new AllEyesOpenedEvent());
+                }
+                eyeFrameCount = 0;
+            }
         }
 
         //Checking for Landmarks - Right, Left & Bottom Mouth
-        if ((contains(face.getLandmarks(), 11) != 99)
-                && (contains(face.getLandmarks(), 5) != 99)
-                && (contains(face.getLandmarks(), 0) != 99)) {
+        if ((contains(face.getLandmarks(), 11) != LANDMARK_CONST)
+                && (contains(face.getLandmarks(), 5) != LANDMARK_CONST)
+                && (contains(face.getLandmarks(), 0) != LANDMARK_CONST)) {
             Log.i("FaceGraphic","Landmarks Present");
             //Coordinate : Bottom Mouth
-            //int cBottomMouthX = (int) translateX(face.getLandmarks().get(contains(face.getLandmarks(), 0)).getPosition().x);
+            int cBottomMouthX = (int) translateX(face.getLandmarks().get(contains(face.getLandmarks(), 0)).getPosition().x);
             int cBottomMouthY = (int) translateY(face.getLandmarks().get(contains(face.getLandmarks(), 0)).getPosition().y);
+            canvas.drawCircle(cBottomMouthX, cBottomMouthY, 10, mIdPaint);
             //Coordinate : Left Mouth
             //int cLeftMouthX = (int) translateX(face.getLandmarks().get(contains(face.getLandmarks(), 5)).getPosition().x);
             int cLeftMouthY = (int) translateY(face.getLandmarks().get(contains(face.getLandmarks(), 5)).getPosition().y);
+            //canvas.drawCircle(cLeftMouthX, cLeftMouthY, 10, mIdPaint);
             //Coordinate : Right Mouth
             //int cRightMouthX = (int) translateX(face.getLandmarks().get(contains(face.getLandmarks(), 11)).getPosition().x);
             int cRightMouthY = (int) translateY(face.getLandmarks().get(contains(face.getLandmarks(), 11)).getPosition().y);
+            //canvas.drawCircle(cRightMouthX, cRightMouthY, 10, mIdPaint);
 
             //float centerPointX = (cLeftMouthX + cRightMouthX) / 2;
             float centerPointY = ((cLeftMouthY + cRightMouthY) / 2) - 20;
+            //canvas.drawCircle(centerPointX, centerPointY, 10, mIdPaint);
 
             //float differenceX = centerPointX - cBottomMouthX;
             float differenceY = centerPointY - cBottomMouthY;
+            canvas.drawText("Mouth Open: " + String.format("%.2f", differenceY), cBottomMouthX + ID_X_OFFSET, cBottomMouthY + ID_Y_OFFSET, mIdPaint);
 
             //Checking Mouth Open / Close
-            if (!mouthOpened && differenceY < (-100)) {
+            if (!mouthOpened && differenceY < (-95)) {
                 mouthOpened = true;
-            } else if(mouthOpened && differenceY >= (-100)) {
+            } else if(mouthOpened && differenceY >= (-95)) {
                 mouthOpened = false;
             }
             if (mouthOpened) {
                 mouthFrameCount += 1;
-                if(mouthFrameCount >= REQ_FPS) {
+                if(mouthFrameCount >= REQ_MOUTH_FPS) {
                     canvas.drawText("ALERT: Yawning", right + 4 * ID_X_OFFSET, top - 10.0f, mIdAlert);
                     EventBus.getDefault().post(new MouthOpenedEvent());
                 }
             } else if (!mouthOpened) {
-                if (mouthFrameCount >= REQ_FPS) {
+                if (mouthFrameCount >= REQ_MOUTH_FPS) {
                     canvas.drawText("", right + 4*ID_X_OFFSET, top - 10.0f, mIdAlert);
                     EventBus.getDefault().post(new MouthClosedEvent());
                 }
@@ -164,10 +178,11 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
                 return i;
             }
         }
-        return 99;
+        return LANDMARK_CONST;
     }
 
-    void updateFace(Face face) {
+    void updateFace(Context context,Face face) {
+        mContext = context;
         mFace = face;
         postInvalidate();
     }
