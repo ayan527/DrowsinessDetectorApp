@@ -25,10 +25,8 @@ public class LaunchActivity extends AppCompatActivity {
             @Override
             public void run() {
                 Log.i(TAG,"Moving to MainActivity");
-
-                Intent intent = new Intent(LaunchActivity.this,MainActivity.class);
+                Intent intent = new Intent(LaunchActivity.this,StartingActivity.class);
                 startActivity(intent);
-
                 finish();
             }
         },4000);

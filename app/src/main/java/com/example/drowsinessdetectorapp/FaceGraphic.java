@@ -27,7 +27,6 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
     private static final float ID_X_OFFSET = -50.0f;
     private static final float BOX_STROKE_WIDTH = 5.0f;
 
-    private Paint mFacePositionPaint;
     private Paint mIdPaint;
     private Paint mBoxPaint;
     private Paint mIdAlert;
@@ -38,9 +37,6 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
 
     FaceGraphic(GraphicOverlay overlay) {
         super(overlay);
-
-        mFacePositionPaint = new Paint();
-        mFacePositionPaint.setColor(Color.MAGENTA);
 
         mIdPaint = new Paint();
         mIdPaint.setColor(Color.GREEN);
@@ -145,12 +141,12 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
 
             //float differenceX = centerPointX - cBottomMouthX;
             float differenceY = centerPointY - cBottomMouthY;
-            canvas.drawText("Mouth Open: " + String.format("%.2f", differenceY), cBottomMouthX + ID_X_OFFSET, cBottomMouthY + ID_Y_OFFSET, mIdPaint);
+            canvas.drawText("mouth open: " + String.format("%.2f", differenceY), cBottomMouthX + ID_X_OFFSET, cBottomMouthY + ID_Y_OFFSET, mIdPaint);
 
             //Checking Mouth Open / Close
-            if (!mouthOpened && differenceY < (-95)) {
+            if (!mouthOpened && differenceY < (-85)) {
                 mouthOpened = true;
-            } else if(mouthOpened && differenceY >= (-95)) {
+            } else if(mouthOpened && differenceY >= (-85)) {
                 mouthOpened = false;
             }
             if (mouthOpened) {
@@ -159,7 +155,7 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
                     canvas.drawText("ALERT: Yawning", right + 4 * ID_X_OFFSET, top - 10.0f, mIdAlert);
                     EventBus.getDefault().post(new MouthOpenedEvent());
                 }
-            } else if (!mouthOpened) {
+            } else {
                 if (mouthFrameCount >= REQ_MOUTH_FPS) {
                     canvas.drawText("", right + 4*ID_X_OFFSET, top - 10.0f, mIdAlert);
                     EventBus.getDefault().post(new MouthClosedEvent());
