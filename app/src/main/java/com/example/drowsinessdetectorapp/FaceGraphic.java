@@ -67,11 +67,11 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
         }
 
         if (mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            EAR_THRESHOLD = 0.8f;
-            MAR_THRESHOLD = 29.0f;
+            EAR_THRESHOLD = 0.75f;
+            MAR_THRESHOLD = 28.85f;
         } else if (mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
-            EAR_THRESHOLD = 0.7f;
-            MAR_THRESHOLD = 31.0f;
+            EAR_THRESHOLD = 0.65f;
+            MAR_THRESHOLD = 30.85f;
         }
 
         float x = translateX(face.getPosition().x + face.getWidth() / 2);
@@ -138,7 +138,8 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
         //Checking for Landmarks - Right, Left & Bottom Mouth
         if ((contains(face.getLandmarks(), 11) != LANDMARK_CONST)
                 && (contains(face.getLandmarks(), 5) != LANDMARK_CONST)
-                && (contains(face.getLandmarks(), 0) != LANDMARK_CONST)) {
+                && (contains(face.getLandmarks(), 0) != LANDMARK_CONST)
+                && (contains(face.getLandmarks(),6) != LANDMARK_CONST)) {
             Log.i("FaceGraphic","Landmarks Present");
             //Coordinate : Bottom Mouth
             int cBottomMouthX = (int) translateX(face.getLandmarks().get(contains(face.getLandmarks(), 0)).getPosition().x);
@@ -152,6 +153,14 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
             int cRightMouthX = (int) translateX(face.getLandmarks().get(contains(face.getLandmarks(), 11)).getPosition().x);
             int cRightMouthY = (int) translateY(face.getLandmarks().get(contains(face.getLandmarks(), 11)).getPosition().y);
             //canvas.drawCircle(cRightMouthX, cRightMouthY, 10, mIdPaint);
+            //Coordinate : Nose Base
+            int cNoseBaseX = (int) translateX(face.getLandmarks().get(contains(face.getLandmarks(), 6)).getPosition().x);
+            int cNoseBaseY = (int) translateY(face.getLandmarks().get(contains(face.getLandmarks(), 6)).getPosition().y);
+            canvas.drawCircle(cNoseBaseX, cNoseBaseY, 10, mIdPaint);
+
+            float distanceY = (float) Math.sqrt(Math.pow(cBottomMouthX - cNoseBaseX,2) + Math.pow(cBottomMouthY - cNoseBaseY,2));
+            float distanceX = (float) Math.sqrt(Math.pow(cRightMouthX - cLeftMouthX,2) + Math.pow(cRightMouthY - cLeftMouthY,2));
+            float ratioF = (float) (distanceY / distanceX);
 
             int leftRight = (int) Math.sqrt(Math.pow(cRightMouthX - cLeftMouthX,2) + Math.pow(cRightMouthY - cLeftMouthY,2));
             int leftBottom = (int) Math.sqrt(Math.pow(cBottomMouthX - cLeftMouthX,2) + Math.pow(cBottomMouthY - cLeftMouthY,2));
@@ -160,14 +169,14 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
             double ratio = (Math.pow(leftRight,2) + Math.pow(leftBottom,2) - Math.pow(rightBottom,2)) / (2 * leftBottom * leftRight);
             float degree = (float) (Math.acos(ratio) * (180 / Math.PI));
 
-            canvas.drawText("mouth open: " +String.format("%.2f", face.getIsSmilingProbability()), cBottomMouthX + ID_X_OFFSET, cBottomMouthY + ID_Y_OFFSET, mIdPaint);
+            canvas.drawText("mouth open: " + String.format("%.2f",ratio), cBottomMouthX + ID_X_OFFSET, cBottomMouthY + ID_Y_OFFSET, mIdPaint);
 
             if (!mouthOpened && degree >= MAR_THRESHOLD) {
                 mouthOpened = true;
             } else if(mouthOpened && degree < MAR_THRESHOLD) {
                 mouthOpened = false;
             }
-            if (mouthOpened && face.getIsSmilingProbability() < 0.5f) {
+            if (mouthOpened && face.getIsSmilingProbability() <= 0.45f && ratioF > 1.1f) {
 
                 mouthFrameCount += 1;
                 if(mouthFrameCount >= REQ_MOUTH_FPS) {
