@@ -132,7 +132,10 @@ public class MainActivity extends AppCompatActivity {
 
         Context context = getApplicationContext();
         detector = new FaceDetector.Builder(context)
+                .setProminentFaceOnly(true)
+                .setMode(FaceDetector.SELFIE_MODE)
                 .setLandmarkType(FaceDetector.ALL_LANDMARKS)
+                .setTrackingEnabled(true)
                 .setClassificationType(FaceDetector.ALL_CLASSIFICATIONS)
                 .build();
 
