@@ -68,10 +68,10 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
 
         if (mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             EAR_THRESHOLD = 0.75f;
-            MAR_THRESHOLD = 28.85f;
+            MAR_THRESHOLD = 110.0f;
         } else if (mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
             EAR_THRESHOLD = 0.65f;
-            MAR_THRESHOLD = 30.85f;
+            MAR_THRESHOLD = 119.5f;
         }
 
         float x = translateX(face.getPosition().x + face.getWidth() / 2);
@@ -156,27 +156,30 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
             //Coordinate : Nose Base
             int cNoseBaseX = (int) translateX(face.getLandmarks().get(contains(face.getLandmarks(), 6)).getPosition().x);
             int cNoseBaseY = (int) translateY(face.getLandmarks().get(contains(face.getLandmarks(), 6)).getPosition().y);
-            canvas.drawCircle(cNoseBaseX, cNoseBaseY, 10, mIdPaint);
+            //canvas.drawCircle(cNoseBaseX, cNoseBaseY, 10, mIdPaint);
+
+
+            double sqrt = Math.sqrt(Math.pow(cRightMouthX - cLeftMouthX, 2) + Math.pow(cRightMouthY - cLeftMouthY, 2));
 
             float distanceY = (float) Math.sqrt(Math.pow(cBottomMouthX - cNoseBaseX,2) + Math.pow(cBottomMouthY - cNoseBaseY,2));
-            float distanceX = (float) Math.sqrt(Math.pow(cRightMouthX - cLeftMouthX,2) + Math.pow(cRightMouthY - cLeftMouthY,2));
-            float ratioF = (float) (distanceY / distanceX);
+            float distanceX = (float) sqrt;
+            float ratioF = (distanceY / distanceX);
 
-            int leftRight = (int) Math.sqrt(Math.pow(cRightMouthX - cLeftMouthX,2) + Math.pow(cRightMouthY - cLeftMouthY,2));
+            int leftRight = (int) sqrt;
             int leftBottom = (int) Math.sqrt(Math.pow(cBottomMouthX - cLeftMouthX,2) + Math.pow(cBottomMouthY - cLeftMouthY,2));
             int rightBottom = (int) Math.sqrt(Math.pow(cBottomMouthX - cRightMouthX,2) + Math.pow(cBottomMouthY - cRightMouthY,2));
 
-            double ratio = (Math.pow(leftRight,2) + Math.pow(leftBottom,2) - Math.pow(rightBottom,2)) / (2 * leftBottom * leftRight);
+            double ratio = (Math.pow(rightBottom,2) + Math.pow(leftBottom,2) - Math.pow(leftRight,2)) / (2 * leftBottom * rightBottom);
             float degree = (float) (Math.acos(ratio) * (180 / Math.PI));
 
-            canvas.drawText("mouth open: " + String.format("%.2f",ratio), cBottomMouthX + ID_X_OFFSET, cBottomMouthY + ID_Y_OFFSET, mIdPaint);
+            canvas.drawText("mouth open: " + String.format("%.2f",degree) /*+ ": " + String.format("%.2f",ratioF)*/, cBottomMouthX + ID_X_OFFSET, cBottomMouthY + ID_Y_OFFSET, mIdPaint);
 
-            if (!mouthOpened && degree >= MAR_THRESHOLD) {
+            if (!mouthOpened && degree < MAR_THRESHOLD) {
                 mouthOpened = true;
-            } else if(mouthOpened && degree < MAR_THRESHOLD) {
+            } else if(mouthOpened && degree >= MAR_THRESHOLD) {
                 mouthOpened = false;
             }
-            if (mouthOpened && face.getIsSmilingProbability() <= 0.45f && ratioF > 1.1f) {
+            if (mouthOpened && face.getIsSmilingProbability() <= 0.475f && ratioF >= 1.1f) {
 
                 mouthFrameCount += 1;
                 if(mouthFrameCount >= REQ_MOUTH_FPS) {
