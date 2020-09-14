@@ -1,6 +1,4 @@
-package com.example.drowsinessdetectorapp;
-
-import androidx.appcompat.app.AppCompatActivity;
+package com.example.drowsinessdetectorapp.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,7 +6,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+
+import com.example.drowsinessdetectorapp.R;
 
 public class StartingActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "StartingActivity";
@@ -76,7 +78,7 @@ public class StartingActivity extends AppCompatActivity implements View.OnClickL
                     Log.i(TAG, "Click Start");
             }
         } else if (v.getId() == R.id.btnStart) {
-            Intent intent = new Intent(this,MainActivity.class);
+            Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             finish();
         }
@@ -84,6 +86,6 @@ public class StartingActivity extends AppCompatActivity implements View.OnClickL
 
     private void setBackgroundImage(int id) {
         drawableId = id;
-        startingLayout.setBackground(getDrawable(drawableId));
+        startingLayout.setBackground(ContextCompat.getDrawable(this,id));
     }
 }

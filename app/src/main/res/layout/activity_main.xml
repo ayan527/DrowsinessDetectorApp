@@ -5,17 +5,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context=".activity.MainActivity">
 
-    <com.example.drowsinessdetectorapp.CameraSourcePreview
+    <com.example.drowsinessdetectorapp.util.CameraSourcePreview
         android:id="@+id/preview"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.example.drowsinessdetectorapp.GraphicOverlay
+        <com.example.drowsinessdetectorapp.util.GraphicOverlay
             android:id="@+id/faceOverlay"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
-    </com.example.drowsinessdetectorapp.CameraSourcePreview>
+    </com.example.drowsinessdetectorapp.util.CameraSourcePreview>
 
 </LinearLayout>

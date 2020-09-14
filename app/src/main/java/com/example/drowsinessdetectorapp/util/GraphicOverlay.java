@@ -1,4 +1,4 @@
-package com.example.drowsinessdetectorapp;
+package com.example.drowsinessdetectorapp.util;
 
 import android.content.Context;
 import android.graphics.Canvas;

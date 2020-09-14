@@ -1,4 +1,4 @@
-package com.example.drowsinessdetectorapp;
+package com.example.drowsinessdetectorapp.activity;
 
 import android.Manifest;
 import android.app.Activity;
@@ -16,6 +16,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import com.example.drowsinessdetectorapp.R;
+import com.example.drowsinessdetectorapp.event.AllEyesClosedEvent;
+import com.example.drowsinessdetectorapp.event.AllEyesOpenedEvent;
+import com.example.drowsinessdetectorapp.event.MouthClosedEvent;
+import com.example.drowsinessdetectorapp.event.MouthOpenedEvent;
+import com.example.drowsinessdetectorapp.util.CameraSourcePreview;
+import com.example.drowsinessdetectorapp.util.GraphicOverlay;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.vision.CameraSource;
@@ -35,49 +42,61 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 
+    //Declare Camera & Face-Detection related variables
     private CameraSource mCameraSource = null;
-
     private CameraSourcePreview mPreview;
     private GraphicOverlay mGraphicOverlay;
-    private FaceDetector detector;
+    private FaceDetector mDetector;
 
+    //Declare the MediaPlayer variables
     private MediaPlayer alarmPlayer;
     private MediaPlayer warningPlayer;
     private MediaPlayer yawnPlayer;
 
-    private static final int RC_HANDLE_GMS = 9001;
+    //Constants for Permissions
+    private static final int RC_HANDLE_GMS = 1;
     private static final int RC_HANDLE_CAMERA_PERM = 2;
 
+    //updating lock
     private final AtomicBoolean updating = new AtomicBoolean(false);
 
+    //Permission-grant Checking
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode != RC_HANDLE_CAMERA_PERM) {
-            Log.d(TAG, "Got unexpected permission result: " + requestCode);
+            //Camera Permission not requested
+            Log.d(TAG, "Error in Camera-Permission: " + requestCode);
+
+            //Call parent class menthod
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
             return;
         }
 
         if (grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            Log.d(TAG, "Camera permission granted - initialize the camera source");
-            // we have permission, so create the camerasource
+            //Camera Permission is granted
+            Log.d(TAG, "Camera-Permission is granted");
+
+            //Create the camera-source
             createCameraSource();
             return;
         }
 
-        Log.e(TAG, "Permission not granted: results len = " + grantResults.length +
-                " Result code = " + (grantResults.length > 0 ? grantResults[0] : "(empty)"));
+        //Camera Permission is not granted
+        Log.d(TAG, "Camera-Permission is not granted");
 
+        //On "OK" application will exit
         DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 finish();
             }
         };
 
+        //Creating an AlertDialog Box for informing the client
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Face Tracker sample")
+        builder.setTitle("Drowsiness Detector Error")
                 .setMessage(R.string.no_camera_permission)
                 .setPositiveButton(R.string.ok, listener)
+                .create()
                 .show();
     }
 
@@ -86,34 +105,44 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //Initializing the Camera View
         mPreview = (CameraSourcePreview) findViewById(R.id.preview);
         mGraphicOverlay = (GraphicOverlay) findViewById(R.id.faceOverlay);
 
+        //Initializing the Warning Sounds
         alarmPlayer = MediaPlayer.create(this,R.raw.alarm);
         warningPlayer = MediaPlayer.create(this,R.raw.warning);
         yawnPlayer = MediaPlayer.create(this,R.raw.warning_yawn);
 
+        //First checking if Camera permission is granted or not
         int rc = ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
         if (rc == PackageManager.PERMISSION_GRANTED) {
+            //Camera Permission is granted. So create the camera-source
             createCameraSource();
         } else {
+            //Camera Permission is not granted. So make a request for Camera Permission
             requestCameraPermission();
         }
     }
 
+    //Requesting for Camera Permisiion
     private void requestCameraPermission() {
-        Log.i(TAG, "Camera permission is not granted. Requesting permission");
+        Log.i(TAG, "Requesting for Camera-Permission");
 
+        //Adding Camera-Permission in request queue
         final String[] permissions = new String[]{Manifest.permission.CAMERA};
 
         if (!ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.CAMERA)) {
+            //Request has been sent to user for Camera permission.
             ActivityCompat.requestPermissions(this, permissions, RC_HANDLE_CAMERA_PERM);
             return;
         }
 
+        //Finalizing the Activity context
         final Activity thisActivity = this;
 
+        //On "OK" application will request for Camera-Permission
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -122,16 +151,20 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
+        //Creating an Snackbar for requesting the client for Camera-Permission
         Snackbar.make(mGraphicOverlay, R.string.permission_camera_rationale,
                 Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.ok, listener)
                 .show();
     }
 
+    //Creating the Camera Source
     private void createCameraSource() {
-
+        //Application Context is taken
         Context context = getApplicationContext();
-        detector = new FaceDetector.Builder(context)
+
+        //Setting the Face-Detector
+        mDetector = new FaceDetector.Builder(context)
                 .setProminentFaceOnly(true)
                 .setMode(FaceDetector.SELFIE_MODE)
                 .setLandmarkType(FaceDetector.ALL_LANDMARKS)
@@ -139,37 +172,49 @@ public class MainActivity extends AppCompatActivity {
                 .setClassificationType(FaceDetector.ALL_CLASSIFICATIONS)
                 .build();
 
-        detector.setProcessor(
+        //Setting the processor for Face-Detector
+        mDetector.setProcessor(
                 new MultiProcessor.Builder<>(new GraphicFaceTrackerFactory())
                         .build());
 
-        if (!detector.isOperational()) {
-            Log.i(TAG, "Face detector dependencies are not yet available.");
+        //Checking if Face-Detector is Operational or not
+        if (!mDetector.isOperational()) {
+            Log.i(TAG, "Face-Detector is not operational");
         }
 
-        mCameraSource = new CameraSource.Builder(context, detector)
+        //Creating the Camera Source, taking the created Face-Detector
+        mCameraSource = new CameraSource.Builder(context, mDetector)
                 .setRequestedPreviewSize(640, 480)
-                .setFacing(CameraSource.CAMERA_FACING_FRONT)
+                .setFacing(CameraSource.CAMERA_FACING_FRONT) //Front-Camera is On
                 .setAutoFocusEnabled(true)
                 .setRequestedFps(15.0f)
                 .build();
     }
 
+    //Starting the Camera Source when application is in Resume State
     private void startCameraSource() {
-
+        //Checking if Google Api/Google Play Service is available or not
         int code = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(
                 getApplicationContext());
+
+        //If Google Play Service is not available then show an errror message
         if (code != ConnectionResult.SUCCESS) {
             Dialog dlg =
                     GoogleApiAvailability.getInstance().getErrorDialog(this, code, RC_HANDLE_GMS);
             dlg.show();
         }
 
+        //Google Play Service is available
+        //Start Camera-Preview
         if (mCameraSource != null) {
             try {
+                //Trying to start Camera-Preview
                 mPreview.start(mCameraSource, mGraphicOverlay);
             } catch (IOException e) {
-                Log.i(TAG, "Unable to start camera source.", e);
+                //Camera-Source is unable to start
+                Log.i(TAG, "Camera-Source cannot be started.", e);
+
+                //Release Camera-Source
                 mCameraSource.release();
                 mCameraSource = null;
             }
@@ -184,6 +229,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //Creating the Face-Tracker class for this Application
     private static class GraphicFaceTracker extends Tracker<Face> {
         private GraphicOverlay mOverlay;
         private FaceGraphic mFaceGraphic;
@@ -197,44 +243,51 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onNewItem(int faceId, Face item) {
-
+            //Nothing to implement
         }
 
+        //Constant update on Face-Tracking
         @Override
         public void onUpdate(FaceDetector.Detections<Face> detectionResults, Face face) {
             mOverlay.add(mFaceGraphic);
             mFaceGraphic.updateFace(mContext,face);
         }
 
+        //Remove the Face-Graphic when face cannot be tracked
         @Override
         public void onMissing(FaceDetector.Detections<Face> detectionResults) {
             mOverlay.remove(mFaceGraphic);
         }
 
+        //Remove the Face-Graphic when application is paused/closed
         @Override
         public void onDone() {
             mOverlay.remove(mFaceGraphic);
         }
     }
 
+    //All eyes closed event is called
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void allEyesClosed(AllEyesClosedEvent event) {
         alarmPlayer.start();
         releaseUpdatingLock();
     }
 
+    //All eyes opened event is called
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void allEyesOpened(AllEyesOpenedEvent event) {
         warningPlayer.start();
         releaseUpdatingLock();
     }
 
+    //Mouth opened event is called
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void mouthOpened(MouthOpenedEvent event) {
         alarmPlayer.start();
         releaseUpdatingLock();
     }
 
+    //Mouth closed event is called
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void mouthClosed(MouthClosedEvent event) {
         yawnPlayer.start();
@@ -245,6 +298,7 @@ public class MainActivity extends AppCompatActivity {
 //        return !updating.getAndSet(true);
 //    }
 
+    //Relaeasing the lock
     private void releaseUpdatingLock() {
         updating.set(false);
     }
@@ -252,21 +306,29 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        //Register for EventBus
         EventBus.getDefault().register(this);
+
+        //Start the Camera-Source by starting Camera-Preview
         startCameraSource();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+
+        //Free-up/Unregister the EventBus
         if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);
         }
 
+        //Pause the Warning Sounds when other Activity comes in
         if (alarmPlayer.isPlaying()) alarmPlayer.pause();
         if (warningPlayer.isPlaying()) warningPlayer.pause();
         if (yawnPlayer.isPlaying()) yawnPlayer.pause();
 
+        //Stop the Camera-Preview whenever other Activity comes in
         mPreview.stop();
     }
 
@@ -274,13 +336,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
 
+        //Stop the Warning Sounds when app gets closed somehow
         if (alarmPlayer.isPlaying()) alarmPlayer.stop();
         if (warningPlayer.isPlaying()) warningPlayer.stop();
         if (yawnPlayer.isPlaying()) yawnPlayer.stop();
 
-        if(detector != null) {
-            detector.release();
+        //Release the Face-Detector
+        if(mDetector != null) {
+            mDetector.release();
         }
+
+        //Release the Camera-Source
         if (mCameraSource != null) {
             mCameraSource.release();
         }

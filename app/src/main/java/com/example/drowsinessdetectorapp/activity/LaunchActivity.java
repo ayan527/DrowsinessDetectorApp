@@ -1,4 +1,4 @@
-package com.example.drowsinessdetectorapp;
+package com.example.drowsinessdetectorapp.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,6 +6,8 @@ import android.os.Handler;
 import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.drowsinessdetectorapp.R;
 
 public class LaunchActivity extends AppCompatActivity {
     private static final String TAG = "LaunchActivity";
@@ -25,7 +27,7 @@ public class LaunchActivity extends AppCompatActivity {
             @Override
             public void run() {
                 Log.i(TAG,"Moving to MainActivity");
-                Intent intent = new Intent(LaunchActivity.this,StartingActivity.class);
+                Intent intent = new Intent(LaunchActivity.this, StartingActivity.class);
                 startActivity(intent);
                 finish();
             }

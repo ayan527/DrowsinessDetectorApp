@@ -1,4 +1,4 @@
-package com.example.drowsinessdetectorapp;
+package com.example.drowsinessdetectorapp.activity;
 
 import android.content.Context;
 import android.content.res.Configuration;
@@ -8,6 +8,11 @@ import android.graphics.Paint;
 import android.os.Handler;
 import android.util.Log;
 
+import com.example.drowsinessdetectorapp.event.AllEyesClosedEvent;
+import com.example.drowsinessdetectorapp.event.AllEyesOpenedEvent;
+import com.example.drowsinessdetectorapp.event.MouthClosedEvent;
+import com.example.drowsinessdetectorapp.event.MouthOpenedEvent;
+import com.example.drowsinessdetectorapp.util.GraphicOverlay;
 import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.Landmark;
 
