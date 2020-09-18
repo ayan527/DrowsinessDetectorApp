@@ -1,5 +1,6 @@
 package com.example.drowsinessdetectorapp.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Canvas;
@@ -21,20 +22,32 @@ import org.greenrobot.eventbus.EventBus;
 import java.util.List;
 
 public class FaceGraphic extends GraphicOverlay.Graphic {
+    //Threshold values initialized later
     private float EAR_THRESHOLD;
     private float MAR_THRESHOLD;
+
+    //Landmark Request Contant
     private static final int LANDMARK_CONST = 99;
+
+    //Frames per second considered for detection
     private static final int REQ_EYE_FPS = 20;
     private static final int REQ_MOUTH_FPS = 15;
+
+    //Initial frame-counts for both Eye & Yawn Detection
     private int eyeFrameCount = 0;
     private int mouthFrameCount = 0;
 
     private static final String TAG = "FaceGraphic";
 
+    //Default Text-Size Constants
     private static final float ID_TEXT_SIZE = 40.0f;
     private static final float ID_ALERT_SIZE = 65.0f;
+
+    //Default X,Y Offset Constants
     private static final float ID_Y_OFFSET = 50.0f;
     private static final float ID_X_OFFSET = -50.0f;
+
+    //Default Width of Bounding-Box
     private static final float BOX_STROKE_WIDTH = 5.0f;
 
     private Paint mIdPaint;
@@ -43,10 +56,14 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
 
     private volatile Face mFace;
     private Context mContext;
+
+    //Detection events are by-default False
     private boolean leftClosed, rightClosed, mouthOpened,isDrowsyAlertOn,isYawnAlertOn;
 
     FaceGraphic(GraphicOverlay overlay) {
         super(overlay);
+
+        Log.i(TAG,"Variables are to be Initialized");
 
         mIdPaint = new Paint();
         mIdPaint.setColor(Color.GREEN);
@@ -63,9 +80,15 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
         mBoxPaint.setStrokeWidth(BOX_STROKE_WIDTH);
     }
 
+    @SuppressLint("DefaultLocale")
     @Override
     public void draw(Canvas canvas) {
+        Log.i(TAG,"Face Detection begins");
+
+        //Handler is created to hold the Alert Signal for few milli-seconds
         final Handler handler = new Handler();
+
+
         Face face = mFace;
         if (face == null) {
             return;
@@ -209,6 +232,7 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
         }
     }
 
+    //Check if required landmarks are found or not
     int contains(List<Landmark> list, int name) {
         for (int i = 0; i < list.size(); i++) {
             if (list.get(i).getType() == name) {
@@ -218,7 +242,7 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
         return LANDMARK_CONST;
     }
 
-
+    //Detection of frontal-face is being updated according to consecutive frames & positions
     void updateFace(Context context,Face face) {
         mContext = context;
         mFace = face;

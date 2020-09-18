@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/home_fragment"
+            android:title="@string/home"
+            android:icon="@drawable/ic_home" />
+
+        <item
+            android:id="@+id/facts_fragment"
+            android:title="@string/facts"
+            android:icon="@drawable/ic_facts"/>
+
+        <item
+            android:id="@+id/developers_fragment"
+            android:title="@string/developers"
+            android:icon="@drawable/ic_developers"/>
+
+        <item
+            android:id="@+id/about_fragment"
+            android:title="@string/about"
+            android:icon="@drawable/ic_about"/>
+    </group>
+</menu>

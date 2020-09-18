@@ -3,24 +3,36 @@ package com.example.drowsinessdetectorapp.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
 
 import com.example.drowsinessdetectorapp.R;
+import com.example.drowsinessdetectorapp.fragment.AboutFragment;
+import com.example.drowsinessdetectorapp.fragment.DevelopersFragment;
+import com.example.drowsinessdetectorapp.fragment.FactsFragment;
+import com.example.drowsinessdetectorapp.fragment.HomeFragment;
+import com.google.android.material.navigation.NavigationView;
 
-public class StartingActivity extends AppCompatActivity implements View.OnClickListener {
+public class StartingActivity extends AppCompatActivity {
     private static final String TAG = "StartingActivity";
 
-    private RelativeLayout startingLayout;
-    private Button btnNextSlide;
-    private Button btnPreviousSlide;
-    private Button btnStart;
+    private NavigationView startingViewNavigation;
+    private CoordinatorLayout startingCoordinatorLayout;
+    //private FrameLayout startingFrameLayout;
+    private DrawerLayout startingDrawerLayout;
 
-    private int drawableId;
+    private MenuItem previousMenuItem = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,64 +40,79 @@ public class StartingActivity extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.activity_starting);
         Log.i(TAG,"Created");
 
-        startingLayout = (RelativeLayout) findViewById(R.id.startingLayout);
-        setBackgroundImage(R.drawable.androidfact1);
+        initializeViews();
+        openHomeFragment();
 
-        btnNextSlide = (Button) findViewById(R.id.btnNextSlide);
-        btnNextSlide.setOnClickListener(this);
-        btnNextSlide.setEnabled(true);
+        startingViewNavigation.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
 
-        btnPreviousSlide = (Button) findViewById(R.id.btnPreviousSlide);
-        btnPreviousSlide.setOnClickListener(this);
+                if (previousMenuItem != null)
+                    previousMenuItem.setChecked(false);
 
-        btnStart = (Button) findViewById(R.id.btnStart);
-        btnStart.setOnClickListener(this);
-    }
+                menuItem.setChecked(true);
+                menuItem.setCheckable(true);
 
-    @Override
-    public void onClick(View v) {
-        if (v.getId() == R.id.btnNextSlide) {
-            switch (drawableId) {
-                case R.drawable.androidfact1:
-                    setBackgroundImage(R.drawable.androidfact2);
-                    btnPreviousSlide.setEnabled(true);
-                    break;
-                case R.drawable.androidfact2:
-                    setBackgroundImage(R.drawable.androiddeveloper);
-                    break;
-                case R.drawable.androiddeveloper:
-                    setBackgroundImage(R.drawable.androidstart);
-                    btnStart.setEnabled(true);
-                    btnNextSlide.setEnabled(false);
-                    break;
-                default:
-                    Log.i(TAG, "Click Start");
+                previousMenuItem = menuItem;
+
+                switch (menuItem.getItemId()) {
+                    case R.id.home_fragment :
+                        Log.i(TAG,"Opening Home-Fragment");
+
+                        Toast.makeText(StartingActivity.this,"Home!",Toast.LENGTH_SHORT).show();
+                        addFragmentToFrame(new HomeFragment());
+                        break;
+                    case R.id.facts_fragment:
+                        Log.i(TAG,"Opening Facts-Fragment");
+
+                        Toast.makeText(StartingActivity.this,"Facts!",Toast.LENGTH_SHORT).show();
+                        addFragmentToFrame(new FactsFragment());
+                        break;
+                    case R.id.developers_fragment:
+                        Log.i(TAG,"Opening Developers-Fragment");
+
+                        Toast.makeText(StartingActivity.this,"Developers!",Toast.LENGTH_SHORT).show();
+                        addFragmentToFrame(new DevelopersFragment());
+                        break;
+                    case R.id.about_fragment:
+                        Log.i(TAG,"Opening About-Fragment");
+
+                        Toast.makeText(StartingActivity.this,"About!",Toast.LENGTH_SHORT).show();
+                        addFragmentToFrame(new AboutFragment());
+                        break;
+                }
+
+                return true;
             }
-        } else if (v.getId() == R.id.btnPreviousSlide) {
-            switch (drawableId) {
-                case R.drawable.androidfact2:
-                    setBackgroundImage(R.drawable.androidfact1);
-                    btnPreviousSlide.setEnabled(false);
-                    break;
-                case R.drawable.androiddeveloper:
-                    setBackgroundImage(R.drawable.androidfact2);
-                    break;
-                case R.drawable.androidstart:
-                    btnStart.setEnabled(false);
-                    btnNextSlide.setEnabled(true);
-                    setBackgroundImage(R.drawable.androiddeveloper);
-                default:
-                    Log.i(TAG, "Click Start");
-            }
-        } else if (v.getId() == R.id.btnStart) {
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-            finish();
-        }
+        });
+
     }
 
-    private void setBackgroundImage(int id) {
-        drawableId = id;
-        startingLayout.setBackground(ContextCompat.getDrawable(this,id));
+    private void addFragmentToFrame(Fragment newFragment) {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.startingFrameLayout,newFragment)
+                .commit();
+
+        startingDrawerLayout.closeDrawers();
     }
+
+    private void openHomeFragment() {
+        Log.i(TAG,"Opening Home-Fragment");
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.startingFrameLayout, new HomeFragment())
+                .commit();
+
+        startingViewNavigation.setCheckedItem(R.id.home_fragment);
+    }
+
+    private void initializeViews() {
+        Log.i(TAG,"Views are Initialized");
+
+        startingDrawerLayout = (DrawerLayout) findViewById(R.id.startingDrawerLayout);
+        startingCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.startingCoordinatorLayout);
+        //startingFrameLayout = (FrameLayout) findViewById(R.id.startingFrameLayout);
+        startingViewNavigation = (NavigationView) findViewById(R.id.startingViewNavigation);
+    }
+
 }

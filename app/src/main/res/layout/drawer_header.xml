@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="240dp"
+    android:background="@color/colorAccent">
+    
+    <ImageView
+        android:id="@+id/imgDrawerLogo"
+        android:layout_width="125dp"
+        android:layout_height="125dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginStart="20dp"
+        android:background="@drawable/logo"
+        android:contentDescription="@string/drowsiness_detector_logo" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:padding="20dp"
+        android:fontFamily="@font/my_font"
+        android:text="@string/drowsiness_detector"
+        android:textSize="30sp"
+        android:textColor="#FFFFFF"/>
+</LinearLayout>

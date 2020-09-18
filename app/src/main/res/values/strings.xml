@@ -6,4 +6,10 @@
     <string name="low_storage_error">Face detector dependencies cannot be downloaded due to low device storage</string>
     <string name="logo_image">Logo Image</string>
     <string name="drowsiness_detector">Drowsiness Detector</string>
+    <string name="drowsiness_detector_logo">Drowsiness Detector logo</string>
+    <string name="home">Home</string>
+    <string name="facts">Facts</string>
+    <string name="developers">Developers</string>
+    <string name="about">About</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
