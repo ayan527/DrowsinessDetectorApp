@@ -3,22 +3,32 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFB300"
     tools:context=".fragment.HomeFragment">
 
-    <ImageView
-        android:id="@+id/homeFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/androidstart"
-        android:scaleType="fitXY"
-        android:contentDescription="@string/home"/>
-
     <Button
-        android:id="@+id/startButton"
-        android:layout_width="170dp"
-        android:layout_height="70dp"
-        android:layout_centerHorizontal="true"
+        android:id="@+id/homeStartButton"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:visibility="invisible"/>
+        android:layout_centerHorizontal="true"
+        android:text="@string/start"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:textColor="#5F2F00"
+        android:background="@drawable/start_button"
+        android:fontFamily="@font/start_font"
+        style="?android:attr/borderlessButtonStyle"/>
+
+    <TextView
+        android:id="@+id/startTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/homeStartButton"
+        android:layout_marginTop="3dp"
+        android:text="@string/tap_to_start"
+        android:textSize="15sp"
+        android:textColor="#FFFFFF"/>
 
 </RelativeLayout>

@@ -34,11 +34,4 @@ public class LaunchActivity extends AppCompatActivity {
         },4000);
     }
 
-    /*@Override
-    public boolean onTouchEvent(MotionEvent event) {
-        Intent intent = new Intent(this,MainActivity.class);
-        startActivity(intent);
-        finish();
-        return true;
-    }*/
 }

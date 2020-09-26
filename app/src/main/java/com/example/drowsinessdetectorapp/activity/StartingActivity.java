@@ -106,6 +106,16 @@ public class StartingActivity extends AppCompatActivity {
         startingViewNavigation.setCheckedItem(R.id.home_fragment);
     }
 
+    @Override
+    public void onBackPressed() {
+        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.startingFrameLayout);
+        if (!(currentFragment instanceof HomeFragment)) {
+            openHomeFragment();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
     private void initializeViews() {
         Log.i(TAG,"Views are Initialized");
 

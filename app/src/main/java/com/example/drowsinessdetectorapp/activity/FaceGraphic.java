@@ -146,11 +146,11 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
             if (leftClosed && rightClosed) {
                 eyeFrameCount += 1;
                 if (eyeFrameCount >= REQ_EYE_FPS) {
-                    isDrowsyAlertOn = true;
+                    if (!isYawnAlertOn) isDrowsyAlertOn = true;
                     EventBus.getDefault().post(new AllEyesClosedEvent());
                 }
             } else if (!leftClosed && !rightClosed) {
-                if (eyeFrameCount >= REQ_EYE_FPS) {
+                if (eyeFrameCount >= REQ_EYE_FPS && isDrowsyAlertOn) {
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -211,11 +211,11 @@ public class FaceGraphic extends GraphicOverlay.Graphic {
 
                 mouthFrameCount += 1;
                 if(mouthFrameCount >= REQ_MOUTH_FPS) {
-                    isYawnAlertOn = true;
+                    if (!isDrowsyAlertOn) isYawnAlertOn = true;
                     EventBus.getDefault().post(new MouthOpenedEvent());
                 }
             } else {
-                if (mouthFrameCount >= REQ_MOUTH_FPS) {
+                if (mouthFrameCount >= REQ_MOUTH_FPS && isYawnAlertOn) {
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {

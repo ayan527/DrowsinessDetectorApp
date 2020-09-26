@@ -13,4 +13,6 @@
         android:scaleType="fitXY"
         android:contentDescription="@string/facts" />
 
+
+
 </RelativeLayout>

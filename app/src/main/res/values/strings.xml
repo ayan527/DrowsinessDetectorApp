@@ -12,4 +12,11 @@
     <string name="developers">Developers</string>
     <string name="about">About</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="start">START</string>
+    <string name="tap_to_start">Tap to start</string>
+    <string name="the_developers">THE DEVELOPERS</string>
+    <string name="ayan_mukherjee">AYAN MUKHERJEE</string>
+    <string name="souvik_ghosh">SOUVIK GHOSH</string>
+    <string name="sawon_bhattacharya">SAWON BHATTACHARYA</string>
+    <string name="rajarsi_saha">RAJARSI SAHA</string>
 </resources>
