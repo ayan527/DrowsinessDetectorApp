@@ -59,25 +59,21 @@ public class StartingActivity extends AppCompatActivity {
                     case R.id.home_fragment :
                         Log.i(TAG,"Opening Home-Fragment");
 
-                        Toast.makeText(StartingActivity.this,"Home!",Toast.LENGTH_SHORT).show();
                         addFragmentToFrame(new HomeFragment());
                         break;
                     case R.id.facts_fragment:
                         Log.i(TAG,"Opening Facts-Fragment");
 
-                        Toast.makeText(StartingActivity.this,"Facts!",Toast.LENGTH_SHORT).show();
                         addFragmentToFrame(new FactsFragment());
                         break;
                     case R.id.developers_fragment:
                         Log.i(TAG,"Opening Developers-Fragment");
 
-                        Toast.makeText(StartingActivity.this,"Developers!",Toast.LENGTH_SHORT).show();
                         addFragmentToFrame(new DevelopersFragment());
                         break;
                     case R.id.about_fragment:
                         Log.i(TAG,"Opening About-Fragment");
 
-                        Toast.makeText(StartingActivity.this,"About!",Toast.LENGTH_SHORT).show();
                         addFragmentToFrame(new AboutFragment());
                         break;
                 }

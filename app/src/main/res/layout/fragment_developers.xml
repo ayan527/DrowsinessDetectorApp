@@ -9,7 +9,7 @@
     <TextView
         android:id="@+id/developerTextView"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="65dp"
         android:background="#ffd46e"
         android:text="@string/the_developers"
         android:textStyle="bold"
@@ -17,6 +17,17 @@
         android:paddingTop="10dp"
         android:textAlignment="center"
         android:textColor="#FFFFFF"/>
+
+    <ImageButton
+        android:id="@+id/hamburgerImageButton"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:src="@drawable/hamburger"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="5dp"
+        android:contentDescription="@string/navigation_drawer"
+        style="?android:attr/borderlessButtonStyle"
+        />
 
     <TextView
         android:id="@+id/text1"
@@ -31,7 +42,7 @@
         android:textSize="15sp"
         android:textColor="#5F2F00"
         android:textAlignment="viewEnd"
-        android:paddingTop="1dp"
+        android:paddingTop="2dp"
         android:paddingEnd="18dp"
         android:paddingStart="18dp"
         android:fontFamily="@font/start_custom_font"/>
@@ -97,9 +108,9 @@
         android:textSize="15sp"
         android:textColor="#5F2F00"
         android:textAlignment="viewStart"
-        android:paddingTop="1dp"
+        android:paddingTop="2dp"
         android:paddingEnd="18dp"
-        android:paddingStart="18dp"
+        android:paddingStart="30dp"
         android:fontFamily="@font/start_custom_font"/>
 
     <ImageView
@@ -163,7 +174,7 @@
         android:textSize="13sp"
         android:textColor="#5F2F00"
         android:textAlignment="viewEnd"
-        android:paddingTop="1dp"
+        android:paddingTop="2dp"
         android:paddingEnd="7dp"
         android:paddingStart="7dp"
         android:fontFamily="@font/start_custom_font"/>
@@ -229,9 +240,9 @@
         android:textSize="15sp"
         android:textColor="#5F2F00"
         android:textAlignment="viewStart"
-        android:paddingTop="1dp"
+        android:paddingTop="2dp"
         android:paddingEnd="18dp"
-        android:paddingStart="18dp"
+        android:paddingStart="32dp"
         android:fontFamily="@font/start_custom_font"/>
 
     <ImageView

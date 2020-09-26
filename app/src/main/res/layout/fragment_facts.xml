@@ -3,16 +3,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFB300"
     tools:context=".fragment.FactsFragment">
 
-    <ImageView
-        android:id="@+id/factsImgView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/androidfact1"
-        android:scaleType="fitXY"
-        android:contentDescription="@string/facts" />
-
-
+    <ImageButton
+        android:id="@+id/hamburgerImageButton"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:src="@drawable/hamburger"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="5dp"
+        android:contentDescription="@string/navigation_drawer"
+        style="?android:attr/borderlessButtonStyle"
+        />
 
 </RelativeLayout>

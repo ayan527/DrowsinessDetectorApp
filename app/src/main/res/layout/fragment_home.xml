@@ -6,6 +6,17 @@
     android:background="#FFB300"
     tools:context=".fragment.HomeFragment">
 
+    <ImageButton
+        android:id="@+id/hamburgerImageButton"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:src="@drawable/hamburger"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="5dp"
+        android:contentDescription="@string/navigation_drawer"
+        style="?android:attr/borderlessButtonStyle"
+        />
+
     <Button
         android:id="@+id/homeStartButton"
         android:layout_width="150dp"
