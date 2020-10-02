@@ -6,13 +6,25 @@
     android:background="#FFB300"
     tools:context=".fragment.AboutFragment">
 
+    <TextView
+        android:id="@+id/aboutTextView"
+        android:layout_width="match_parent"
+        android:layout_height="65dp"
+        android:background="#ffd46e"
+        android:text="@string/about_us"
+        android:textStyle="bold"
+        android:textSize="30sp"
+        android:paddingTop="10dp"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"/>
+
     <ImageButton
         android:id="@+id/hamburgerImageButton"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
+        android:layout_width="33dp"
+        android:layout_height="33dp"
         android:src="@drawable/hamburger"
-        android:layout_marginTop="10dp"
-        android:layout_marginStart="5dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="15dp"
         android:contentDescription="@string/navigation_drawer"
         style="?android:attr/borderlessButtonStyle"
         />

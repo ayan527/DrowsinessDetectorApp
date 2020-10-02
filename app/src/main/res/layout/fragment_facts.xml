@@ -6,15 +6,117 @@
     android:background="#FFB300"
     tools:context=".fragment.FactsFragment">
 
+    <TextView
+        android:id="@+id/factsTextView"
+        android:layout_width="match_parent"
+        android:layout_height="65dp"
+        android:background="#ffd46e"
+        android:text="@string/the_facts"
+        android:textStyle="bold"
+        android:textSize="30sp"
+        android:paddingTop="10dp"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"/>
+
     <ImageButton
         android:id="@+id/hamburgerImageButton"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
+        android:layout_width="33dp"
+        android:layout_height="33dp"
         android:src="@drawable/hamburger"
-        android:layout_marginTop="10dp"
-        android:layout_marginStart="5dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="15dp"
         android:contentDescription="@string/navigation_drawer"
         style="?android:attr/borderlessButtonStyle"
         />
+
+    <ImageButton
+        android:id="@+id/nextFactsButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_alignParentEnd="true"
+        android:contentDescription="@string/facts"
+        android:background="@drawable/ic_next"/>
+
+    <ImageButton
+        android:id="@+id/previousFactsButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_alignParentStart="true"
+        android:contentDescription="@string/facts"
+        android:background="@drawable/ic_previous"
+        android:visibility="invisible"/>
+
+    <ImageView
+        android:id="@+id/imageFact1"
+        android:layout_width="350dp"
+        android:layout_height="200dp"
+        android:contentDescription="@string/facts"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/factsTextView"
+        android:src="@drawable/fact1"
+        android:paddingHorizontal="10dp"/>
+
+    <ImageView
+        android:id="@+id/imageFact2"
+        android:layout_width="350dp"
+        android:layout_height="200dp"
+        android:contentDescription="@string/facts"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/imageFact1"
+        android:src="@drawable/fact2"
+        android:scaleType="fitXY"
+        android:paddingHorizontal="10dp"/>
+
+    <ImageView
+        android:id="@+id/imageFact3"
+        android:layout_width="350dp"
+        android:layout_height="150dp"
+        android:contentDescription="@string/facts"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/imageFact2"
+        android:src="@drawable/fact3"
+        android:layout_marginTop="30dp"
+        android:scaleType="fitXY"
+        android:paddingHorizontal="10dp"/>
+
+
+    <ImageView
+        android:id="@+id/imageFact4"
+        android:layout_width="350dp"
+        android:layout_height="200dp"
+        android:contentDescription="@string/facts"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/factsTextView"
+        android:layout_marginTop="30dp"
+        android:src="@drawable/fact4"
+        android:paddingHorizontal="10dp"
+        android:visibility="invisible"/>
+
+    <ImageView
+        android:id="@+id/imageFact5"
+        android:layout_width="350dp"
+        android:layout_height="200dp"
+        android:contentDescription="@string/facts"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/imageFact4"
+        android:src="@drawable/fact5"
+        android:paddingHorizontal="15dp"
+        android:visibility="invisible"/>
+
+    <ImageView
+        android:id="@+id/imageFact6"
+        android:layout_width="350dp"
+        android:layout_height="150dp"
+        android:contentDescription="@string/facts"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/imageFact5"
+        android:src="@drawable/fact3"
+        android:scaleType="fitXY"
+        android:paddingHorizontal="10dp"
+        android:visibility="invisible"/>
 
 </RelativeLayout>

@@ -15,6 +15,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.drowsinessdetectorapp.R;
@@ -31,6 +32,7 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+
         startingDrawerLayout = (DrawerLayout) getActivity().findViewById(R.id.startingDrawerLayout);
 
         button_click = AnimationUtils.loadAnimation(getContext(),R.anim.button_click);
@@ -39,11 +41,18 @@ public class HomeFragment extends Fragment {
         hamburgerImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!startingDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-                    startingDrawerLayout.openDrawer(GravityCompat.START);
-                } else {
-                    startingDrawerLayout.closeDrawer(GravityCompat.START);
-                }
+                hamburgerImageButton.startAnimation(button_click);
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (!startingDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+                            startingDrawerLayout.openDrawer(GravityCompat.START);
+                        } else {
+                            startingDrawerLayout.closeDrawer(GravityCompat.START);
+                        }
+                    }
+                },200);
             }
         });
 

@@ -8,11 +8,11 @@
 
     <ImageButton
         android:id="@+id/hamburgerImageButton"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
+        android:layout_width="33dp"
+        android:layout_height="33dp"
         android:src="@drawable/hamburger"
-        android:layout_marginTop="10dp"
-        android:layout_marginStart="5dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="15dp"
         android:contentDescription="@string/navigation_drawer"
         style="?android:attr/borderlessButtonStyle"
         />

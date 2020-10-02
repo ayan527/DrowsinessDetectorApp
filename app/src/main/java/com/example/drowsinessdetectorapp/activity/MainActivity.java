@@ -187,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
                 .setRequestedPreviewSize(640, 480)
                 .setFacing(CameraSource.CAMERA_FACING_FRONT) //Front-Camera is On
                 .setAutoFocusEnabled(true)
-                .setRequestedFps(15.0f)
+                .setRequestedFps(14.0f)
                 .build();
     }
 
