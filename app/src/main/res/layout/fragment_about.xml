@@ -29,4 +29,34 @@
         style="?android:attr/borderlessButtonStyle"
         />
 
+    <ImageView
+        android:id="@+id/imageAboutUs1"
+        android:layout_width="350dp"
+        android:layout_height="170dp"
+        android:contentDescription="@string/about_us"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/aboutTextView"
+        android:src="@drawable/about1"
+        android:paddingHorizontal="10dp"/>
+
+    <ImageView
+        android:id="@+id/imageVision"
+        android:layout_width="350dp"
+        android:layout_height="200dp"
+        android:contentDescription="@string/about_us"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/imageAboutUs1"
+        android:src="@drawable/vision"
+        android:paddingHorizontal="10dp"/>
+
+    <ImageView
+        android:id="@+id/imageAboutUs2"
+        android:layout_width="350dp"
+        android:layout_height="150dp"
+        android:contentDescription="@string/about_us"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/imageVision"
+        android:src="@drawable/about2"
+        android:paddingHorizontal="10dp"/>
+
 </RelativeLayout>
