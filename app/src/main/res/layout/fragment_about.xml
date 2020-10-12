@@ -20,11 +20,12 @@
 
     <ImageButton
         android:id="@+id/hamburgerImageButton"
-        android:layout_width="33dp"
-        android:layout_height="33dp"
-        android:src="@drawable/hamburger"
-        android:layout_marginTop="15dp"
-        android:layout_marginStart="15dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/ic_hamburger"
+        android:scaleType="centerCrop"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="4dp"
         android:contentDescription="@string/navigation_drawer"
         style="?android:attr/borderlessButtonStyle"
         />
@@ -58,5 +59,29 @@
         android:layout_below="@+id/imageVision"
         android:src="@drawable/about2"
         android:paddingHorizontal="10dp"/>
+
+    <TextView
+        android:id="@+id/versionTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/imageAboutUs2"
+        android:layout_marginTop="12dp"
+        android:text="@string/version"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"/>
+
+    <TextView
+        android:id="@+id/copyrightTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/versionTextView"
+        android:layout_marginTop="5dp"
+        android:text="Copyright © 2020, Ultra-Dev$, All rights reserved"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"/>
 
 </RelativeLayout>

@@ -8,16 +8,18 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_detector_launcher"
         android:label="@string/app_name"
+        android:icon="@mipmap/ic_detector_launcher"
         android:roundIcon="@mipmap/ic_detector_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
             android:name=".activity.StartingActivity"/>
         <activity
+            android:icon="@mipmap/ic_detector_launcher"
+            android:roundIcon="@mipmap/ic_detector_launcher_round"
             android:name=".activity.LaunchActivity"
-            android:screenOrientation="fullSensor"
+            android:screenOrientation="nosensor"
             android:theme="@style/Theme.AppCompat.NoActionBar"
             android:resizeableActivity="false">
             <intent-filter>
@@ -35,6 +37,8 @@
             android:value="face" />
 
         <activity
+            android:icon="@mipmap/ic_detector_launcher"
+            android:roundIcon="@mipmap/ic_detector_launcher_round"
             android:name=".activity.MainActivity"
             android:screenOrientation="fullSensor"
             android:theme="@style/Theme.AppCompat.NoActionBar">

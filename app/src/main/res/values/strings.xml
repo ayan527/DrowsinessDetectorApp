@@ -22,4 +22,5 @@
     <string name="navigation_drawer">Navigation Drawer</string>
     <string name="the_facts">THE FACTS</string>
     <string name="about_us">ABOUT US</string>
+    <string name="version">Version : 1.0.0</string>
 </resources>
