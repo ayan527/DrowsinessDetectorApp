@@ -38,7 +38,10 @@
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/aboutTextView"
         android:src="@drawable/about1"
-        android:paddingHorizontal="10dp"/>
+        android:scaleType="fitEnd"
+        android:paddingHorizontal="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"/>
 
     <ImageView
         android:id="@+id/imageVision"
@@ -48,7 +51,9 @@
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/imageAboutUs1"
         android:src="@drawable/vision"
-        android:paddingHorizontal="10dp"/>
+        android:paddingHorizontal="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"/>
 
     <ImageView
         android:id="@+id/imageAboutUs2"
@@ -58,15 +63,17 @@
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/imageVision"
         android:src="@drawable/about2"
-        android:paddingHorizontal="10dp"/>
+        android:paddingHorizontal="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"/>
 
     <TextView
         android:id="@+id/versionTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_below="@+id/imageAboutUs2"
-        android:layout_marginTop="12dp"
+        android:layout_above="@id/copyrightTextView"
+        android:layout_marginBottom="5dp"
         android:text="@string/version"
         android:textSize="12sp"
         android:textStyle="bold"
@@ -77,11 +84,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_below="@+id/versionTextView"
-        android:layout_marginTop="5dp"
-        android:text="Copyright © 2020, Ultra-Dev$, All rights reserved"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="15dp"
+        android:text="@string/copyright"
         android:textSize="12sp"
         android:textStyle="bold"
         android:textColor="#FFFFFF"/>
-
 </RelativeLayout>
