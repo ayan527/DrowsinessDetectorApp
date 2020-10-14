@@ -24,6 +24,9 @@
         android:layout_height="60dp"
         android:src="@drawable/ic_hamburger"
         android:scaleType="centerCrop"
+        android:scaleX="1.2"
+        android:scaleY="1.2"
+        android:layout_marginStart="4dp"
         android:layout_alignParentStart="true"
         android:layout_marginTop="4dp"
         android:contentDescription="@string/navigation_drawer"
@@ -62,8 +65,9 @@
         android:contentDescription="@string/facts"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/factsTextView"
-        android:src="@drawable/fact1"
-        android:paddingHorizontal="10dp"/>
+        android:src="@drawable/facts1"
+        android:paddingHorizontal="5dp"
+        android:layout_marginTop="5dp"/>
 
     <ImageView
         android:id="@+id/imageFact2"
@@ -72,9 +76,12 @@
         android:contentDescription="@string/facts"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/imageFact1"
-        android:src="@drawable/fact2"
+        android:src="@drawable/facts2"
         android:scaleType="fitXY"
-        android:paddingHorizontal="10dp"/>
+        android:layout_marginTop="10dp"
+        android:paddingHorizontal="2dp"
+        android:layout_marginBottom="5dp"
+        />
 
     <ImageView
         android:id="@+id/imageFact3"
@@ -83,10 +90,12 @@
         android:contentDescription="@string/facts"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/imageFact2"
-        android:src="@drawable/fact3"
-        android:layout_marginTop="30dp"
+        android:src="@drawable/facts3"
+        android:layout_marginTop="34dp"
         android:scaleType="fitXY"
-        android:paddingHorizontal="10dp"/>
+        android:paddingHorizontal="5dp"
+        android:layout_marginBottom="5dp"
+        />
 
 
     <ImageView
@@ -97,9 +106,12 @@
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/factsTextView"
         android:layout_marginTop="30dp"
-        android:src="@drawable/fact4"
-        android:paddingHorizontal="10dp"
-        android:visibility="invisible"/>
+        android:src="@drawable/facts4"
+        android:scaleType="fitXY"
+        android:paddingHorizontal="5dp"
+        android:visibility="invisible"
+        android:layout_marginBottom="5dp"
+        />
 
     <ImageView
         android:id="@+id/imageFact5"
@@ -108,9 +120,12 @@
         android:contentDescription="@string/facts"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/imageFact4"
-        android:src="@drawable/fact5"
-        android:paddingHorizontal="15dp"
-        android:visibility="invisible"/>
+        android:src="@drawable/facts5"
+        android:paddingHorizontal="5dp"
+        android:layout_marginTop="10dp"
+        android:visibility="invisible"
+        android:layout_marginBottom="5dp"
+        />
 
     <ImageView
         android:id="@+id/imageFact6"
@@ -119,8 +134,10 @@
         android:contentDescription="@string/facts"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/imageFact5"
-        android:src="@drawable/fact6"
-        android:paddingHorizontal="10dp"
-        android:visibility="invisible"/>
+        android:src="@drawable/facts6"
+        android:paddingHorizontal="5dp"
+        android:visibility="invisible"
+        android:layout_marginBottom="5dp"
+        />
 
 </RelativeLayout>

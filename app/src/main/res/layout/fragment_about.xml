@@ -24,6 +24,9 @@
         android:layout_height="60dp"
         android:src="@drawable/ic_hamburger"
         android:scaleType="centerCrop"
+        android:scaleX="1.2"
+        android:scaleY="1.2"
+        android:layout_marginStart="4dp"
         android:layout_alignParentStart="true"
         android:layout_marginTop="4dp"
         android:contentDescription="@string/navigation_drawer"
@@ -52,6 +55,7 @@
         android:layout_below="@+id/imageAboutUs1"
         android:src="@drawable/vision"
         android:paddingHorizontal="10dp"
+        android:layout_marginTop="11dp"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"/>
 
@@ -63,6 +67,7 @@
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/imageVision"
         android:src="@drawable/about2"
+        android:layout_marginTop="1dp"
         android:paddingHorizontal="10dp"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"/>
