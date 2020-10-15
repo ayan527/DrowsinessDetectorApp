@@ -68,8 +68,8 @@ public class HomeFragment extends Fragment {
                         Intent intent = new Intent(getContext(),MainActivity.class);
                         startActivity(intent);
 
-                        if (getActivity() != null)
-                            getActivity().finish();
+                        /*if (getActivity() != null)
+                            getActivity().finish();*/
                     }
                 },100);
             }
